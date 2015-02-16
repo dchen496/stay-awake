@@ -1,0 +1,17 @@
+{
+  "manifest_version": 2,
+
+  "name": "Stay Awake",
+  "description": "Keeps you from falling asleep at your desk.",
+  "version": "1.0",
+
+  "app": {
+    "background": {
+      "scripts": ["bg.js"]
+    }
+  },
+
+  "permissions": [
+    "alarms"
+  ]
+}
