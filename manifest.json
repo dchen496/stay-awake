@@ -7,11 +7,12 @@
 
   "app": {
     "background": {
-      "scripts": ["bg.js"]
+      "scripts": ["js/bg.js"]
     }
   },
 
   "permissions": [
-    "alarms"
+    "alarms",
+    "app.window.alwaysOnTop"
   ]
 }
