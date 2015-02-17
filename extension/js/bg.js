@@ -1,12 +1,19 @@
 appId = "lpfgnfikggnigahfoflahmjpfeafjiim";
 
-chrome.browserAction.onClicked.addListener(toggleAppState);
 chrome.runtime.onMessageExternal.addListener(extMessageListener);
-
+chrome.runtime.onMessage.addListener(messageListener);
 
 chrome.runtime.sendMessage(appId, "getState", function(state) {
   setIcon(state);
 });
+
+function messageListener(message, sender) {
+  switch(message) {
+  case "toggle":
+    toggleAppState();
+    break;
+  }
+}
 
 function extMessageListener(message, sender) {
   console.log("ext message: ", message);
