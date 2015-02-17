@@ -1,0 +1,19 @@
+{
+  "manifest_version": 2,
+
+  "name": "Stay Awake Controller",
+  "description": "Controls the Stay Awake app.",
+  "version": "1.0",
+
+  "background": {
+    "scripts": ["js/bg.js"]
+  },
+
+  "browser_action": {
+
+  },
+
+  "permissions": [
+    "management"
+  ]
+}
