@@ -3,40 +3,37 @@ appId = "lpfgnfikggnigahfoflahmjpfeafjiim";
 chrome.browserAction.onClicked.addListener(toggleAppState);
 chrome.runtime.onMessageExternal.addListener(extMessageListener);
 
-var enabledIcon = getCircle('green', 'darkgreen');
-var disabledIcon = getCircle('red', 'darkred');
 
-var enabled = false;
-disable();
+chrome.runtime.sendMessage(appId, "getState", function(state) {
+  setIcon(state);
+});
 
 function extMessageListener(message, sender) {
   console.log("ext message: ", message);
+  setIcon(message);
+}
+
+function setIcon(message) {
   switch(message) {
   case "enabled":
-    enable();
+    var icon = getCircle('green', 'darkgreen');
+    chrome.browserAction.setIcon({imageData: {'38': icon}});
     break;
   case "disabled":
-    disable();
+    var icon = getCircle('red', 'darkred');
+    chrome.browserAction.setIcon({imageData: {'38': icon}});
     break;
   }
 }
 
 function toggleAppState() {
-  if(enabled) {
-    chrome.runtime.sendMessage(appId, "disable");
-  } else {
-    chrome.runtime.sendMessage(appId, "enable");
-  }
-}
-
-function enable() {
-  chrome.browserAction.setIcon({imageData: {'38': enabledIcon}});
-  enabled = true;
-}
-
-function disable() {
-  chrome.browserAction.setIcon({imageData: {'38': disabledIcon}});
-  enabled = false;
+  chrome.runtime.sendMessage(appId, "getState", {}, function(state) {
+    if(state === "enabled") {
+      chrome.runtime.sendMessage(appId, "disable");
+    } else {
+      chrome.runtime.sendMessage(appId, "enable");
+    }
+  })
 }
 
 function getCircle(fillColor, strokeColor) {

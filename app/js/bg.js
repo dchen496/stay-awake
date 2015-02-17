@@ -1,13 +1,14 @@
 "use strict"
 
 var extensionId = "doopekeglgjblaaglpmmfnhbhbbahkaf";
-var enabled = false;
-disable();
 chrome.alarms.onAlarm.addListener(alarmListener);
 chrome.runtime.onMessage.addListener(messageListener);
 chrome.runtime.onMessageExternal.addListener(extMessageListener);
 chrome.app.runtime.onLaunched.addListener(function() {
   enable();
+});
+chrome.runtime.onInstalled.addListener(function() {
+  disable();
 });
 
 function alarmListener(alarm) {
@@ -29,7 +30,7 @@ function messageListener(message, sender, sendResponse) {
   }
 }
 
-function extMessageListener(message, sender) {
+function extMessageListener(message, sender, sendResponse) {
   console.log("ext message: ", message);
   switch(message) {
   case "enable":
@@ -38,6 +39,16 @@ function extMessageListener(message, sender) {
   case "disable":
     disable();
     break;
+  case "getState":
+    chrome.alarms.getAll(function(alarms) {
+      if(alarms.length == 0) {
+        sendResponse("disabled");
+      } else {
+        sendResponse("enabled");
+      }
+    });
+    // asynchronous response
+    return true;
   }
 }
 
@@ -62,15 +73,13 @@ function closeWindow() {
 }
 
 function enable() {
-  enabled = true;
   chrome.alarms.create("checkAwake", {
-    periodInMinutes: 1
+    periodInMinutes: 5
   });
   chrome.runtime.sendMessage(extensionId, "enabled");
 }
 
 function disable() {
-  enabled = false;
   chrome.alarms.clear("checkAwake");
   chrome.runtime.sendMessage(extensionId, "disabled");
 }
