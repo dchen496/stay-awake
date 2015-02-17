@@ -2,7 +2,7 @@
 
 chrome.app.runtime.onLaunched.addListener(function() {
   chrome.alarms.create("checkAwake", {
-    periodInMinutes: 1 / 10.0
+    periodInMinutes: 5
   });
   chrome.alarms.onAlarm.addListener(alarmListener);
   chrome.runtime.onMessage.addListener(messageListener);
